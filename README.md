@@ -20,3 +20,11 @@ Install the required packages by running:
 
 ```bash
 pip install -r requirements.txt
+```
+
+## Running Script
+To running this script:
+```bash
+python __init__.py
+```
+
