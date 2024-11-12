@@ -12,14 +12,19 @@ This Python script allows you to search for manga titles on the MangaDex API, fe
 
 To use this script, you need:
 
-- **Python 3.7+**
-- **Python Packages**:
-  - `requests`
-  - `python-dotenv`
-  - `tqdm`
+- **Python 3.9+**
+- **Python Packages**
 
 
 Install the required packages by running:
 
 ```bash
 pip install -r requirements.txt
+```
+
+## Running Script
+To running this script:
+```bash
+python __init__.py
+```
+
