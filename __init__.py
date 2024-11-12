@@ -6,7 +6,7 @@ from tqdm import tqdm
 # Load environment variables
 load_dotenv()
 BASE_URL = "https://api.mangadex.org"
-IMAGE_URL = "https://cmdxd98sb0x3yprd.mangadex.network/data"
+IMAGE_URL = "https://uploads.mangadex.org"
 DIRECTORY = Path(__file__).parent
 # -------------------------- #
 
@@ -60,6 +60,7 @@ def api_get_chapter_images(chapters):
                 response = requests.get(f"{BASE_URL}/at-home/server/{chapter['id']}", timeout=10)
                 response.raise_for_status()
                 chapter['images'] = response.json().get('chapter', [])
+                chapter['image_url'] = response.json().get('baseUrl', [])
             except requests.RequestException as e:
                 print(f"Error fetching images for chapter {chapter['chapter']}: {e}")
                 chapter['images'] = None  # Set to None or empty if an error occurs
@@ -104,10 +105,11 @@ def generate_json(data):
         for detail in data['detail']:
             dt = {}
             image_url = []
-            directory_path = f"{data['title']}/{detail['volume']}/{detail['chapter']}"
+            directory_path = f"{data['title']}/{detail['chapter']}"
             image_hash = detail['images']['hash']
+            url = detail['image_url']
             for image in detail['images']['data']:
-                image_path = f"{IMAGE_URL}/{image_hash}/{image}"
+                image_path = f"{url}/data/{image_hash}/{image}"
                 image_url.append(image_path)
             dt['directory_path'] = directory_path
             dt['image_path'] = image_url
@@ -129,6 +131,7 @@ def download_images(data):
             for url in image_urls:
                 # Extract the name from the last part of the URL
                 image_name = url.split('/')[-1]
+                image_name = f"{image_name.split('-')[0]}.png"
                 file_path = os.path.join(f"download/{directory_path}", f"{image_name}")
 
                 # Download and save the image
